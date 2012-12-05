@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>Recorder</title>
+
+    <script src="script/lib/jquery-1.8.2.min.js"></script>
+    <script src="script/lib/recorderjs/recorder.js"></script>
+
+    <script src="script/main.js"></script>
+
+    <style type="text/css">
+      .textInput{
+        width: 150px;
+        height: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="shown">
+      Awaiting permission...
+    </div>
+    <div id="hidden" style="display:none">
+      <a id="record-toggle" href="#">Click me to record.</a><br/><br/></br>
+
+      Play back using the audio exported to a WAV blob & the &lt;audio&gt; tag.<br/>
+      <audio id="recorded-audio" controls="controls">
+      </audio><br/><br/>
+
+   </div>
+   <div>
+      <a id="1" href="#">1</a>
+      <a id="2" href="#">2</a>
+      <a id="3" href="#">3</a>
+      <a id="4" href="#">4</a>
+   </div>
+      <a id="webaudio-playback" href="#">Click me to play back using Web Audio.</a>
+    </br>
+  </div>
+      <p>Wanna create a file?</p>
+      <a id="create" href="#">create</a>
+      <input id="createInput" class="textInput" type="text" value="fileYouFinnaCreate.dawg">
+    </br>
+      <p>Wanna read one of those files?</p>
+      <a id="read" href="#">read</a>
+      <input id='readInput' class="textInput" type='text' value='fileYouFinnaRead.mayne'>
+    </br>
+      <p>Tryna write to a file?</p>
+      <a id="write" href="#">write</a>
+      <br>
+      <input id='writeFileName' class="textInput" type='text' value='fileYouFinnaWrite.bruh'>
+      <br>
+      <input id='writeInput' class="textInput" type='text' value='What you tryna write?'>
+    </br>
+    </br>
+      <p>Wanna delete a file?</p>
+      <a id="delete" href="#">delete</a>
+      <input id='deleteInput' class="textInput" type='text' value='fileYouFinnaDelete.sah'>
+    </br>
+  </div>
+    <p>Whaddaya wanna upload, my dude?</p>
+    <input type="file" id="myfile" multiple />
+  </body>
+</html>
