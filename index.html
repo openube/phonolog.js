@@ -1,16 +1,30 @@
 <html>
   <head>
-    <title>Recorder</title>
+    <title>Phonolog.js</title>
 
     <script src="script/lib/jquery-1.8.2.min.js"></script>
     <script src="script/lib/recorderjs/recorder.js"></script>
 
     <script src="script/main.js"></script>
 
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
+
     <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        margin: 10px;
+      }
       .textInput{
         width: 150px;
         height: 30px;
+      }
+
+      .operation{
+        display: inline block;
+        float: left;
+        margin: 5px;
       }
     </style>
   </head>
@@ -35,29 +49,42 @@
    </div>
       <a id="webaudio-playback" href="#">Click me to play back using Web Audio.</a>
     </br>
-  </div>
-      <p>Wanna create a file?</p>
-      <a id="create" href="#">create</a>
-      <input id="createInput" class="textInput" type="text" value="fileYouFinnaCreate.dawg">
-    </br>
-      <p>Wanna read one of those files?</p>
-      <a id="read" href="#">read</a>
-      <input id='readInput' class="textInput" type='text' value='fileYouFinnaRead.mayne'>
-    </br>
-      <p>Tryna write to a file?</p>
-      <a id="write" href="#">write</a>
+    <div>
+      <div id='creation' class='operation'>
+        <h2>Wanna create a file?</h2>
+        <a id="createFile" href="#">Create File</a>
+        <input id="createFileInput" class="textInput" type="text" placeholder="fileYouFinnaCreate.dawg">
+        <h2>How about a directory?</h2>
+        <a id="createDirectory" href="#">Create Directory</a>
+        <input id="createDirectoryInput" class="textInput" type="text" placeholder="fileYouFinnaCreate.dawg">
+      </div>
+      <div id="reading" class='operation'>
+        <h2>Wanna read one of those files?</h2>
+        <a id="readFile" href="#">Read File</a>
+        <input id='readFileInput' class="textInput" type='text' placeholder='fileYouFinnaRead.mayne'>
+        <h2>Wanna check out a directory?</h2>
+        <a id="readDirectory" href="#">Read Directory</a>
+        <input id='readDirectoryInput' class="textInput" type='text' placeholder='fileYouFinnaRead.mayne'>
+      </div>
+      <div id="writing" class='operation'>
+        <h2>Tryna write to a file?</h2>
+        <a id="write" href="#">Write File</a>
+        <input id='writeFileName' class="textInput" type='text' placeholder='fileYouFinnaWrite.bruh'>
+        <input id="writeInput" class="textInput" type='text' placeholder='stuffYouFinnaWrite'>
+      </div>
       <br>
-      <input id='writeFileName' class="textInput" type='text' value='fileYouFinnaWrite.bruh'>
-      <br>
-      <input id='writeInput' class="textInput" type='text' value='What you tryna write?'>
-    </br>
-    </br>
-      <p>Wanna delete a file?</p>
-      <a id="delete" href="#">delete</a>
-      <input id='deleteInput' class="textInput" type='text' value='fileYouFinnaDelete.sah'>
-    </br>
-  </div>
-    <p>Whaddaya wanna upload, my dude?</p>
-    <input type="file" id="myfile" multiple />
+      <div id="deletion" class='operation'>
+        <h2>Wanna delete a file?</h2>
+        <a id="deleteFile" href="#">deleteFile</a>
+        <input id='deleteInput' class="textInput" type='text' placeholder='fileYouFinnaDelete.sah'>
+        <h2>Wanna delete a directory (be careful!)</h2>
+        <a id="deleteDirectory" href="#">
+        <input id='deleteDirectory' class="textInput" type='text' placeholder='fileYouFinnaDelete.sah'>
+      </div>
+      <div id="uploads" class='operation'>
+        <h2>Whaddaya wanna upload, my dude?</h2>
+        <input type="file" id="myfile" multiple />
+      </div>
+    </div>
   </body>
 </html>

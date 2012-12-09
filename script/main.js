@@ -2,6 +2,14 @@ $(function () {
 
   var data = []
   var fileSystem = null
+  var audioPath = 'audio/user/'
+  
+  var audioBuffer;
+  var sourceNode;
+  var splitter;
+  var analyser, analyser2;
+  var javascriptNode;
+  var context;
 
   // FILE SYSTEM STUFF
 
@@ -21,6 +29,8 @@ $(function () {
     fileSystem = fs;
   }
 
+
+  // FILE CRUD
   function createFile(){
       var fileName = document.getElementById('createInput').value;
 
@@ -34,7 +44,7 @@ $(function () {
   }
 
   function readFile(){
-    var fileName = document.getElementById('readInput').value;
+    var fileName = document.getElementById('readFileInput').value;
 
     fileSystem.root.getFile(fileName, {}, function(fileEntry) {
 
@@ -109,19 +119,33 @@ $(function () {
       }
   };
 
-  $("a#create").click(function (e){
-      createFile();
-    });
+  // Directory CRUD
+  function createDir(rootDirEntry, folders) {
+  // Throw out './' or '/' and move on to prevent something like '/foo/.//bar'.
+  if (folders[0] == '.' || folders[0] == '') {
+    folders = folders.slice(1);
+  }
+  rootDirEntry.getDirectory(folders[0], {create: true}, function(dirEntry) {
+    // Recursively add the new subfolder (if we still have another to create).
+    if (folders.length) {
+      createDir(dirEntry, folders.slice(1));
+    }
+  }, errorHandler);
+};
 
-  $("a#read").click(function (e){
+  $("a#createFile").click(function (e){
+    createFile();
+  });
+
+  $("a#readFile").click(function (e){
     readFile();
   });
 
-  $("a#write").click(function (e){
+  $("a#writeFile").click(function (e){
     writeToFile();
   })
 
-  $("a#delete").click(function (e){
+  $("a#deleteFile").click(function (e){
     deleteFile();
   })
 
@@ -185,14 +209,69 @@ $(function () {
     });
   }
 
+function setupAudioNodes() {
+
+        // setup a javascript node
+        javascriptNode = context.createJavaScriptNode(2048, 1, 1);
+        // connect to destination, else it isn't called
+        javascriptNode.connect(context.destination);
+
+
+        // setup a analyzer
+        analyser = context.createAnalyser();
+        analyser.smoothingTimeConstant = 0.3;
+        analyser.fftSize = 1024;
+
+        console.log("Analyser", analyser)
+
+        // create a buffer source node
+        sourceNode = context.createBufferSource();
+        splitter = context.createChannelSplitter();
+
+        // connect the source to the analyser and the splitter
+        sourceNode.connect(splitter);
+
+        // connect one of the outputs from the splitter to
+        // the analyser
+        splitter.connect(analyser,0,0);
+
+        // connect the splitter to the javascriptnode
+        // we use the javascript node to draw at a
+        // specific interval.
+        analyser.connect(javascriptNode);
+
+        splitter.connect(context.destination,0,0);
+
+        // and connect to destination
+        sourceNode.connect(context.destination);
+    }
+    
+  function getAverageVolume(array) {
+        var values = 0;
+        var average;
+
+        var length = array.length;
+
+        // get all the frequency amplitudes
+        for (var i = 0; i < length; i++) {
+            values += array[i];
+        }
+
+        average = values / length;
+        return average;
+    }
+
   navigator.webkitGetUserMedia({"audio": true}, function(stream) {
 
     $("#shown").toggle();
     $("#hidden").toggle();
 
-    var audioContext = new webkitAudioContext();
-    var mediaStreamSource = audioContext.createMediaStreamSource( stream );
-    //mediaStreamSource.connect( audioContext.destination );
+    context = new webkitAudioContext();
+    var mediaStreamSource = context.createMediaStreamSource( stream );
+
+    setupAudioNodes();
+
+    //mediaStreamSource.connect( context.destination );
 
     var recorder = new Recorder(mediaStreamSource);
     var recording = false;
@@ -210,6 +289,20 @@ $(function () {
       }
 
     });
+
+    javascriptNode.onaudioprocess = function() {
+
+        // get the average for the first channel
+        var array =  new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(array);
+
+        //console.log(array)
+
+        var average = getAverageVolume(array);
+
+        //console.log(average)
+    }
+
 
     $("a#1").click(function (e){
       console.log(data)
